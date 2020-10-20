@@ -77,7 +77,8 @@ material/0 = SubResource( 9 )
 shape = SubResource( 10 )
 
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
-transform = Transform( 1, 0, 0, 0, 0.640136, 0.768261, 0, -0.768261, 0.640136, 0, 3.33082, 0 )
+transform = Transform( 0.866025, 0.25, -0.433013, 0, 0.866025, 0.5, 0.5, -0.433013, 0.75, 0, 14.83, 0 )
+light_color = Color( 0.921569, 0.745098, 0.141176, 1 )
 
 [node name="CameraBase" type="Spatial" parent="."]
 transform = Transform( 0.998391, 0, 0.0567102, 0, 1, 0, -0.0567102, 0, 0.998391, 0, 0, 0 )

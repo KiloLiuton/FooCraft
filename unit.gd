@@ -10,12 +10,21 @@ var draw_path = true
 onready var nav = get_parent()
 
 var m = SpatialMaterial.new()
+var outline = SpatialMaterial.new()
 
 func _ready():
 	set_process_input(true)
 	m.flags_unshaded = true
 	m.flags_use_point_size = true
 	m.albedo_color = Color.white
+	
+	outline.flags_unshaded = true
+	outline.params_cull_mode = SpatialMaterial.CULL_FRONT
+	outline.params_grow = true
+	outline.params_grow_amount = 0.05
+	outline.albedo_color = Color.green
+	var mesh = get_node("MeshInstance")
+	mesh.add_next_pass(outline)
 
 func _physics_process(delta):
 	if path_node < path.size():
