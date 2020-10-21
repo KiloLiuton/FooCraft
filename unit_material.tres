@@ -1,0 +1,37 @@
+[gd_resource type="SpatialMaterial" load_steps=3 format=2]
+
+[sub_resource type="Shader" id=5]
+code = "shader_type spatial;
+render_mode unshaded, cull_front;
+
+uniform bool enable = true; // on and off switsch to diesable/enable the outline
+// outline costumization
+uniform float outline_thickness = 0.05; // how thick is the outline?
+uniform vec4 color : hint_color = vec4(0.0); // which color does the outline have?
+
+
+void vertex() {
+	if (enable) {
+	VERTEX += NORMAL*outline_thickness; // apply the outlines thickness	
+	}
+}
+
+void fragment() {
+	if (enable) {
+	ALBEDO = color.rgb; // apply the outlines color
+	}
+}"
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = SubResource( 5 )
+shader_param/enable = true
+shader_param/outline_thickness = 0.05
+shader_param/color = Color( 0, 0, 0, 0 )
+
+[resource]
+next_pass = SubResource( 6 )
+params_diffuse_mode = 4
+params_specular_mode = 3
+albedo_color = Color( 0.792157, 0.0862745, 0.894118, 1 )
+metallic_specular = 0.4
+roughness = 0.22

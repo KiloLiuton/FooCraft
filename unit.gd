@@ -1,31 +1,33 @@
 extends KinematicBody
 
+var speed = 10
+
 var path = []
 var path_node = 0
-var speed = 10
 var begin = Vector3()
 var end = Vector3()
 var draw_path = true
 
-onready var nav = get_parent()
+onready var navmesh = get_parent()
 
-var m = SpatialMaterial.new()
-var outline = SpatialMaterial.new()
+#var m = SpatialMaterial.new()
+var mat = preload("unit_material.tres").duplicate(true)
+
 
 func _ready():
-	set_process_input(true)
-	m.flags_unshaded = true
-	m.flags_use_point_size = true
-	m.albedo_color = Color.white
+#	m.flags_unshaded = true
+#	m.flags_use_point_size = true
+#	m.albedo_color = Color.white
+	self.connect("mouse_entered", self, "_on_unit_mouse_entered" )
+	self.connect("mouse_exited", self, "_on_unit_mouse_exited" )
 	
-	outline.flags_unshaded = true
-	outline.params_cull_mode = SpatialMaterial.CULL_FRONT
-	outline.params_grow = true
-	outline.params_grow_amount = 0.05
-	outline.albedo_color = Color.green
 	var mesh = get_node("MeshInstance")
-	mesh.add_next_pass(outline)
-
+	mesh.set_surface_material(0, mat)
+	mat.next_pass.set_shader_param("color", Color(0.0, 1.0, 0.0, 1.0))
+	mat.next_pass.set_shader_param("outline_thickness", 0.08)
+	mat.next_pass.set_shader_param("enable", false)
+	
+	
 func _physics_process(delta):
 	if path_node < path.size():
 		var dir = path[path_node] - global_transform.origin
@@ -34,33 +36,29 @@ func _physics_process(delta):
 		else:
 			move_and_slide(dir.normalized() * speed, Vector3.UP)
 
+
 func move_to(target_pos):
-	path = nav.get_simple_path(global_transform.origin, target_pos)
+	var begin = navmesh.get_closest_point(get_translation())
+	path = navmesh.get_simple_path(global_transform.origin, target_pos)
 	path_node = 0
 	
-	if draw_path:
-		var im = get_node("../../draw")
-		im.set_material_override(m)
-		im.clear()
-		im.begin(Mesh.PRIMITIVE_POINTS, null)
-		im.add_vertex(begin)
-		im.add_vertex(end)
-		im.end()
-		im.begin(Mesh.PRIMITIVE_LINE_STRIP, null)
-		for x in path:
-			im.add_vertex(x)
-		im.end()
+#	if draw_path:
+#		var im = get_node("../../draw")
+#		im.set_material_override(m)
+#		im.clear()
+#		im.begin(Mesh.PRIMITIVE_POINTS, null)
+#		im.add_vertex(begin)
+#		im.add_vertex(end)
+#		im.end()
+#		im.begin(Mesh.PRIMITIVE_LINE_STRIP, null)
+#		for x in path:
+#			im.add_vertex(x)
+#		im.end()
 
-func _unhandled_input(event):
 
-	if event is InputEventMouseButton and event.button_index == BUTTON_RIGHT and event.pressed:
-		var raylength = 200
-		var camera = get_node("../../CameraBase/Camera")
-		var rayfrom = camera.project_ray_origin(event.position)
-		var raydir = rayfrom + camera.project_ray_normal(event.position) * raylength
-		var p = nav.get_closest_point_to_segment(rayfrom, raydir)
-		
-		begin = nav.get_closest_point(get_translation())
-		end = p
-		move_to(p)
-		print("Walking to: ", end)
+func _on_unit_mouse_entered():
+	get_node("MeshInstance").get_surface_material(0).next_pass.set_shader_param("enable", true)
+
+
+func _on_unit_mouse_exited():
+	get_node("MeshInstance").get_surface_material(0).next_pass.set_shader_param("enable", false)
