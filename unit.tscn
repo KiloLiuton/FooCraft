@@ -6,7 +6,7 @@
 [sub_resource type="CapsuleMesh" id=1]
 mid_height = 3.0
 
-[sub_resource type="CapsuleShape" id=4]
+[sub_resource type="CapsuleShape" id=2]
 height = 2.96427
 
 [node name="unit" type="KinematicBody"]
@@ -19,4 +19,7 @@ material/0 = ExtResource( 2 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
-shape = SubResource( 4 )
+shape = SubResource( 2 )
+
+[node name="SelectionHalo" type="ImmediateGeometry" parent="."]
+[connection signal="input_event" from="." to="." method="_on_unit_input_event"]

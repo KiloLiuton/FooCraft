@@ -7,11 +7,13 @@ func _ready():
 	selected_units.append(get_node("Navigation/unit"))
 	selected_units.append(get_node("Navigation/unit2"))
 	selected_units[1].get_node("MeshInstance").get_surface_material(0).albedo_color = Color.blue
+	selected_units[0].connect("unit_clicked", self, "_unit_clicked")
+	selected_units[1].connect("unit_clicked", self, "_unit_clicked")
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func _process(delta):
+	pass
 
 
 func _unhandled_input(event):
@@ -31,3 +33,9 @@ func _unhandled_input(event):
 				var tgt = nav.get_closest_point_to_segment(rayfrom, rayto)
 				tgt = nav.get_closest_point(tgt + (selected_units[i].get_translation() - center))
 				selected_units[i].move_to(tgt)
+	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.pressed:
+		pass
+
+
+func _unit_clicked(event, unit_pos):
+	print(unit_pos)

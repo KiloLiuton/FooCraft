@@ -13,6 +13,7 @@ onready var navmesh = get_parent()
 #var m = SpatialMaterial.new()
 var mat = preload("unit_material.tres").duplicate(true)
 
+signal unit_clicked(event, unit_pos)
 
 func _ready():
 #	m.flags_unshaded = true
@@ -20,6 +21,7 @@ func _ready():
 #	m.albedo_color = Color.white
 	self.connect("mouse_entered", self, "_on_unit_mouse_entered" )
 	self.connect("mouse_exited", self, "_on_unit_mouse_exited" )
+	self.connect("input_event", self, "_on_unit_mouse_clicked")
 	
 	var mesh = get_node("MeshInstance")
 	mesh.set_surface_material(0, mat)
@@ -56,9 +58,25 @@ func move_to(target_pos):
 #		im.end()
 
 
+func draw_selection_halo(circle_center, circle_radius):
+	var UP = Vector3(0,1,0)
+	$"SelectionHalo".clear()
+	$"SelectionHalo".begin(Mesh.PRIMITIVE_LINE_LOOP)
+	for i in range(32):
+		var rotation = float(i) / 32 * TAU
+		$"SelectionHalo".add_vertex($"SelectionHalo".rotated(UP, circle_radius-circle_center) + circle_center)
+	$"SelectionHalo".end()
+
+
 func _on_unit_mouse_entered():
 	get_node("MeshInstance").get_surface_material(0).next_pass.set_shader_param("enable", true)
 
 
 func _on_unit_mouse_exited():
 	get_node("MeshInstance").get_surface_material(0).next_pass.set_shader_param("enable", false)
+
+
+func _on_unit_mouse_clicked(camera, event, click_position, click_normal, shape_idx):
+	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.pressed:
+#		emit_signal("unit_clicked", event, get_translation())
+		get_node('/root').selected_units.append(self)
