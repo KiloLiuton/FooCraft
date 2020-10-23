@@ -4,11 +4,7 @@ var selected_units = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	selected_units.append(get_node("Navigation/unit"))
-	selected_units.append(get_node("Navigation/unit2"))
-	selected_units[1].get_node("MeshInstance").get_surface_material(0).albedo_color = Color.blue
-	selected_units[0].connect("unit_clicked", self, "_unit_clicked")
-	selected_units[1].connect("unit_clicked", self, "_unit_clicked")
+	get_node("Navigation/unit/MeshInstance").get_surface_material(0).albedo_color = Color.blue
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

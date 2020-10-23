@@ -1,7 +1,7 @@
 extends KinematicBody
 
 export var move_speed = 10
-export var halo_size = 1.7
+export var halo_size = 1.4
 
 var path = []
 var path_node = 0
@@ -32,6 +32,7 @@ func _ready():
 	mat.next_pass.set_shader_param("enable", false)
 	
 	draw_selection_halo(halo_size)
+	$"SelectionHalo".visible = false
 	
 	
 func _physics_process(delta):
@@ -68,7 +69,7 @@ func draw_selection_halo(circle_radius):
 	$"SelectionHalo".begin(Mesh.PRIMITIVE_LINE_LOOP)
 	for i in range(32):
 		var rotation = float(i) / 32 * TAU
-		$"SelectionHalo".add_vertex( Vector3(cos(rotation), -1, sin(rotation))*circle_radius )
+		$"SelectionHalo".add_vertex( Vector3(cos(rotation), -1.4, sin(rotation))*circle_radius )
 	$"SelectionHalo".end()
 
 
