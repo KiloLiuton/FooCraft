@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://unit.gd" type="Script" id=1]
 [ext_resource path="res://unit_material.tres" type="Material" id=2]
+[ext_resource path="res://selection_halo.tres" type="Material" id=3]
 
 [sub_resource type="CapsuleMesh" id=1]
 mid_height = 3.0
@@ -22,4 +23,6 @@ transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0
 shape = SubResource( 2 )
 
 [node name="SelectionHalo" type="ImmediateGeometry" parent="."]
+material_override = ExtResource( 3 )
+cast_shadow = 0
 [connection signal="input_event" from="." to="." method="_on_unit_input_event"]

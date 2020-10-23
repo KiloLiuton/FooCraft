@@ -1,6 +1,7 @@
 extends KinematicBody
 
-var speed = 10
+export var move_speed = 10
+export var halo_size = 1.7
 
 var path = []
 var path_node = 0
@@ -12,8 +13,9 @@ onready var navmesh = get_parent()
 
 #var m = SpatialMaterial.new()
 var mat = preload("unit_material.tres").duplicate(true)
+var halo_mat = preload("selection_halo.tres")
 
-signal unit_clicked(event, unit_pos)
+#signal unit_clicked(event, unit_pos)
 
 func _ready():
 #	m.flags_unshaded = true
@@ -29,6 +31,8 @@ func _ready():
 	mat.next_pass.set_shader_param("outline_thickness", 0.08)
 	mat.next_pass.set_shader_param("enable", false)
 	
+	draw_selection_halo(halo_size)
+	
 	
 func _physics_process(delta):
 	if path_node < path.size():
@@ -36,7 +40,7 @@ func _physics_process(delta):
 		if dir.length() < 1:
 			path_node += 1
 		else:
-			move_and_slide(dir.normalized() * speed, Vector3.UP)
+			move_and_slide(dir.normalized() * move_speed, Vector3.UP)
 
 
 func move_to(target_pos):
@@ -58,13 +62,13 @@ func move_to(target_pos):
 #		im.end()
 
 
-func draw_selection_halo(circle_center, circle_radius):
+func draw_selection_halo(circle_radius):
 	var UP = Vector3(0,1,0)
 	$"SelectionHalo".clear()
 	$"SelectionHalo".begin(Mesh.PRIMITIVE_LINE_LOOP)
 	for i in range(32):
 		var rotation = float(i) / 32 * TAU
-		$"SelectionHalo".add_vertex($"SelectionHalo".rotated(UP, circle_radius-circle_center) + circle_center)
+		$"SelectionHalo".add_vertex( Vector3(cos(rotation), -1, sin(rotation))*circle_radius )
 	$"SelectionHalo".end()
 
 
@@ -78,5 +82,15 @@ func _on_unit_mouse_exited():
 
 func _on_unit_mouse_clicked(camera, event, click_position, click_normal, shape_idx):
 	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.pressed:
-#		emit_signal("unit_clicked", event, get_translation())
-		get_node('/root').selected_units.append(self)
+		if Input.is_key_pressed(KEY_SHIFT):
+			if self in get_node("/root/Spatial").selected_units:
+				get_node("/root/Spatial").selected_units.erase(self)
+				$"SelectionHalo".visible = false
+			else:
+				get_node("/root/Spatial").selected_units.append(self)
+				$"SelectionHalo".visible = true
+		else:
+			for u in get_node("/root/Spatial").selected_units:
+				u.get_node("SelectionHalo").visible = false
+			get_node("/root/Spatial").selected_units = [self]
+			$"SelectionHalo".visible = true
