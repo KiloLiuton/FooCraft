@@ -85,7 +85,7 @@ light_color = Color( 0.921569, 0.745098, 0.141176, 1 )
 shadow_enabled = true
 
 [node name="CameraBase" type="Spatial" parent="."]
-transform = Transform( 0.998391, 0, 0.0567102, 0, 1, 0, -0.0567102, 0, 0.998391, 0, 0, 0 )
+transform = Transform( 0, 0, 0.057, 0, 1, 0, 0, 0, 0.998, 0, 0, 0 )
 
 [node name="Camera" type="Camera" parent="CameraBase"]
 transform = Transform( 0.999942, 0.00879276, 0.00624862, -0.0107382, 0.756394, 0.654028, 0.00102429, -0.654057, 0.756444, -0.306701, 17.8387, 22.751 )

@@ -1,0 +1,15 @@
+[
+    {
+        "arguments": [
+            "gcc",
+            "-c",
+            "-Wall",
+            "-g",
+            "-I",
+            "../godot_headers/",
+            "simple.c"
+        ],
+        "directory": "/home/kevin/godot_projects/FooCraft/src",
+        "file": "simple.c"
+    }
+]
